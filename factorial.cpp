@@ -1,27 +1,66 @@
 #include <iostream>
+#include <string>
+#include <exception>
+
+using std::cout;
+using std::cin;
+using std::endl;
+using std::string;
+using std::stoi;
+using std::exception;
 
 
-unsigned long long int factorial(int n){
-	unsigned long long int result = 1;
-	for (int i = 2; i <= n; i++){
-		result *= i;
+class myexception: public exception {
+    public:
+	virtual const char* what() const throw() {
+	    return "\nError: a negative or very large number:";
 	}
-	return result;
+} myex;
+
+
+
+//check if number or string
+void check_number(string str) {
+    for (int i = 0; i < str.length(); i++){
+	if (isdigit(str[i]) == false){
+	    throw 0;
+	}
+    }
 }
 
+
+// calculate factorial
+unsigned long long int factorial(int n){
+    unsigned long long int result = 1;
+    for (int i = 2; i <= n; i++){
+	result *= i;
+    }
+    return result;
+}
+
+
 int main(){
-	int number;
-	std::cout << "Enter number (1-66) -> iterative factorial: ";
+    try{
+	string number_str;
+	cout << "Enter number: ";
+	cin >> number_str;
+	
+	check_number(number_str);
+	
+	int number_int = stoi(number_str); 
+	//std::stoi function returns the converted integral number as an int value (base 10).
 
-	std::cin >> number;
-
-	if (number < 0 || number >= 66){
-		std::cout << "Error: a negative or very large number" << std::endl;
+	if (number_int < 0 || number_int >= 66){
+	    throw myex;
+	}else{
+	    cout << number_int << "! = " << factorial(number_int) << endl;
 	}
-	else {
-		std::cout << number << "! = " << factorial(number) << std::endl;
-	}
-
-	return 0;
+    }
+    catch(const exception& e){
+	cout << e.what() << '\n';
+    }
+    catch(const int& e){
+	cout << "\nThe input isn't int!" << '\n';
+    }
 }
 
